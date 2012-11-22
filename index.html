@@ -23,6 +23,7 @@
             img  = snapshot.toDataURL('image/jpeg', 1),
             data = JSON.stringify({ img: img });
 
+        console.log(data);
         req.open('POST', '/image');
         req.responseType = 'text';
 
