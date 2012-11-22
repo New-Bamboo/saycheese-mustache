@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Say Cheese - Mustachify</title>
+  </head>
+
+  <body>
+    <div id="webcam-container"></div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="https://raw.github.com/leemachin/say-cheese/master/say-cheese.js"></script>
+    <script>
+      var webcam = new SayCheese('#webcam-container');
+
+      webcam.on('start', function() {
+        window.setTimeout(function() {
+          this.takeSnapshot();
+        }, 2000);
+      });
+
+      webcam.on('snapshot', function(evt, snapshot) {
+        var req  = new XMLHttpRequest(),
+            img  = snapshot.toDataURL('image/jpeg', 1),
+            data = JSON.stringify({ img: img });
+
+        req.open('POST', '/image');
+        req.responseType = 'text';
+
+        req.onload = function(evt) {
+          var url = this.response,
+              img = document.createElement('img');
+
+          img.onload = function() {
+            document.body.appendChild(this);
+          }
+
+          img.src = url;
+        };
+
+        req.send(data);
+      });
+
+      webcam.start();
+    </script>
+  </body>
+</html>
