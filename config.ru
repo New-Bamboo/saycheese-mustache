@@ -1,6 +1,5 @@
-require 'aws/s3'
+require 'bundler'
+Bundler.setup
+
 require './app'
-
-
-
 run Sinatra::Application
