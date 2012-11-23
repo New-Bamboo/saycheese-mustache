@@ -3,11 +3,45 @@
   <head>
     <meta charset="utf-8">
     <title>Say Cheese - Mustachify</title>
+
+    <style>
+      #webcam-container {
+        float: left;
+        margin: 5px;
+      }
+
+      #snap {
+        display: block;
+        clear: both;
+      }
+
+      #results {
+        float: left;
+        margin: 5px;
+      }
+
+      #results img {
+        display: block;
+        width: 400px;
+        padding-bottom: 10px;
+      }
+    </style>
   </head>
 
   <body>
-    <div id="webcam-container"></div>
-    <button id="snap" disabled>Snap!</button>
+    <header>
+      <h1>Say Cheese Mustachify</h1>
+    </header>
+
+    <div id="wrapper">
+      <div id="webcam-container"></div>
+      <div id="results"></div>
+      <button id="snap" disabled>Snap!</button>
+    </div>
+
+    <footer>
+      <p><a href="http://new-bamboo.co.uk">New Bamboo</a> | <a href="http://leemachin.github.com/say-cheese">Say Cheese</a></p>
+    </footer>
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script src="https://raw.github.com/leemachin/say-cheese/master/say-cheese.js"></script>
@@ -17,13 +51,13 @@
       webcam.on('start', function() {
         $('#snap')
           .attr('disabled', false)
-          .on('click', function() { return webcam.takeSnapshot() });
+          .on('click', function() { return webcam.takeSnapshot(), webcam.video.pause(); });
       });
 
       webcam.on('snapshot', function(evt, snapshot) {
         var req  = new XMLHttpRequest(),
-            img  = snapshot.toDataURL('image/jpeg').split(',')[1]
-;
+            img  = snapshot.toDataURL('image/jpeg').split(',')[1];
+
         req.open('POST', '/image');
 
         req.onload = function(evt) {
@@ -31,7 +65,8 @@
               img = document.createElement('img');
 
           img.onload = function() {
-            return document.body.insertBefore(this, webcam.element);
+            webcam.video.play();
+            return $('#results').prepend(this);
           }
 
           img.src = url;
