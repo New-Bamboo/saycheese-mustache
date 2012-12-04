@@ -55,7 +55,7 @@
           .on('click', function() { return webcam.takeSnapshot(), webcam.video.pause(); });
       });
 
-      webcam.on('snapshot', function(evt, snapshot) {
+      webcam.on('snapshot', function(snapshot) {
         var req  = new XMLHttpRequest(),
             img  = snapshot.toDataURL('image/jpeg').split(',')[1];
 
